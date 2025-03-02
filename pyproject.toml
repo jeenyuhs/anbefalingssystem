@@ -1,0 +1,20 @@
+[tool.poetry]
+name = "film-anbefalingssystem"
+version = "0.1.0"
+description = "Anbefalingssystem til film med K-cluster means"
+authors = ["Simon G. <45692977+jeenyuhs@users.noreply.github.com>"]
+license = "MIT"
+readme = "README.md"
+
+[tool.poetry.dependencies]
+python = "^3.10"
+pandas = "^2.2.3"
+requests = "^2.32.3"
+scikit-learn = "^1.6.1"
+matplotlib = "^3.10.1"
+scipy = "^1.15.2"
+
+
+[build-system]
+requires = ["poetry-core"]
+build-backend = "poetry.core.masonry.api"
