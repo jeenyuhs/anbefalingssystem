@@ -1,5 +1,6 @@
 import pandas as pd
 
+from sklearn.cluster import KMeans
 import streamlit as st
 import model
 
@@ -13,14 +14,13 @@ def main() -> None:
     
     # load the model
     kmeans, features = model.fit(movies_df)    # mutates movies_df in function
-    
 
     search_input = st.text_input("Vælg en film, du kan lide.")
 
     if not search_input:
         return
-    
-    recommendations, cluster_plot = st.tabs(["Anbefalinger", "Cluster plot"])
+
+    recommendations, cluster_plot, inertia = st.tabs(["Anbefalinger", "Cluster plot", "Inertia analyse"])
 
     if not movies_df.isin([search_input]).any().any():
         st.write(f"There is no movie named `{search_input}`")
@@ -35,6 +35,29 @@ def main() -> None:
         "i den cluster den tilhører og dermed få "
         "et bedre indblik på hvilke film er "
         "tættest på, den man valgte."
+    )
+
+    inertia.write(
+        "For at kunne finde ud af den mængde clusters man skal anvende, "
+        "for at modellen bliver så bedst som overhovedet muligt, kan man "
+        "lave en inertia analyse."
+    )
+
+    _n_clusters = range(1, 40)
+    inertias = []
+    with st.spinner("Analysere inertia værdien...", show_time=True):
+        for k in _n_clusters:
+            model_ = KMeans(n_clusters=k)
+            model_.fit(features)
+            
+            inertias.append(model_.inertia_)
+
+    inertia.line_chart(inertias)
+    inertia.write(
+        "Når inertia værdien pludselig falder, betyder det, at vi er på "
+        "vej til at nå en mængde clusters, som passer godt til vores datasæt. "
+        "I vores tilfælde kan vi se når vi gør brug af ca. 15-20 clusters, "
+        "så begynder faldet at ligne ud."
     )
 
 if __name__ == "__main__":
