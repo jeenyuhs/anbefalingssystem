@@ -24,7 +24,7 @@ def fit(df: pd.DataFrame) -> tuple[KMeans, Any]:
     combined_features = hstack((overview_matrix, genre_matrix)).tocsr()
     
     # initalize the kmeans cluster
-    kmeans = KMeans(n_clusters=10, random_state=42)
+    kmeans = KMeans(n_clusters=20, random_state=42)
     df["cluster"] = kmeans.fit_predict(combined_features)
     
     return (kmeans, combined_features)
@@ -46,7 +46,9 @@ def get_movies_based_on_title(df: pd.DataFrame, title: str, features: Any) -> pd
     # recommendations
     similarities = cosine_similarity(input_movie_vector, recommended_vectors).flatten()
     recommended_movies["similarity"] = similarities
-    recommended_movies["sort_method"] = similarities + (recommended_movies["rating"] * 0.03)
+
+    # slightly change the sorting method to include rating in the final sorting
+    recommended_movies["sort_method"] = similarities * 1.4 + (recommended_movies["rating"] * 0.02)
     
     recommended_movies.sort_values(by="sort_method", ascending=False, inplace=True)
     
