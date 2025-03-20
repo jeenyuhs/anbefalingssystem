@@ -7,6 +7,8 @@ from sklearn.metrics.pairwise import cosine_similarity
 from scipy.sparse import hstack
 from sklearn.preprocessing import MultiLabelBinarizer
 
+# TODO: expand model
+
 def fit(df: pd.DataFrame) -> tuple[KMeans, Any]:
     # vectorize the description of the movies
     tfidf = TfidfVectorizer()
