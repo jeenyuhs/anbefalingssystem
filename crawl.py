@@ -3,8 +3,12 @@ import os
 
 import httpx
 import asyncio
-
+from dotenv import load_dotenv
 from httpx import Response
+
+from models.movie import Movie
+
+load_dotenv()
 
 BEARER_TOKEN = os.environ["BEARER_TOKEN"]
 MAX_REQUESTS_PER_SECOND = 40
@@ -38,7 +42,11 @@ async def crawl_api():
             if not data or len(data) == 0:
                 break
 
-            # TODO: insertion logic
+            for movie in data["results"]:
+                serialized_movie = Movie.from_api(movie)
+                print(serialized_movie.__dict__)
+
+                # TODO: Get movie cast
 
             page += 1
 

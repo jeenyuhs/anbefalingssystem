@@ -6,8 +6,7 @@ from models import Base
 class Actor(Base):
     __tablename__ = "actors"
 
-
-    id = Column(Integer, primary_key=True)
+    id = Column(Integer, primary_key=True, autoincrement=True)
     name = Column(String)
 
     def as_dict(self) -> dict[str, Any]:

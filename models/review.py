@@ -1,12 +1,11 @@
-from sqlalchemy import Column, Integer, String, TIMESTAMP, ForeignKey
-from sqlalchemy.orm import relationship
+from sqlalchemy import Column, Integer, String, TIMESTAMP
 
 from models import Base
 
 class Review(Base):
     __tablename__ = "reviews"
 
-    id = Column(Integer, primary_key=True)
+    id = Column(Integer, primary_key=True, autoincrement=True)
     movie_id = Column(Integer)
     user_id = Column(Integer)
     title = Column(String)
