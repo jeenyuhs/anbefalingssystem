@@ -56,7 +56,7 @@ async def movie_reviews(movie_id: int, session: Annotated[Session, Depends(get_s
     return [
         {
             **review.as_dict(),
-            "user": user.as_dict()
+            "user": user.as_dict()  
         }
         for review, user in reviews
     ]
@@ -79,3 +79,30 @@ async def movie_cast(movie_id: int, session: Annotated[Session, Depends(get_sess
         }
         for character, actor in cast
     ]
+
+@router.get("/actor/{actor_id}")
+async def actor_by_id(actor_id: int, session: Annotated[Session, Depends(get_session)]):
+    # include the actors movies in the response
+    stmt = select(Actor)\
+        .filter(Actor.id == actor_id)
+    
+    actor = session.execute(stmt).first()
+
+    if not actor:
+        raise HTTPException(status_code=404, detail="Actor not found")
+    
+    actor = actor[0]
+
+    movies_stmt = select(Movie)\
+        .join(Cast, Movie.id == Cast.movie_id)\
+        .filter(Cast.actor_id == actor_id)
+    
+    movies = session.execute(movies_stmt).all()
+
+    return {
+        **actor.as_dict(),
+        "movies": [
+            movie[0].as_dict()
+            for movie in movies
+        ]
+    }

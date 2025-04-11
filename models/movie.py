@@ -1,5 +1,5 @@
 from sqlalchemy import Integer
-from sqlalchemy import Column, String, Float, TIMESTAMP
+from sqlalchemy import Column, String, Float, DATETIME
 from typing import Any
 from datetime import datetime
 
@@ -13,7 +13,10 @@ class Movie(Base):
     description = Column(String)
     rating = Column(Float)
     genres = Column(Integer)
-    release_date = Column(TIMESTAMP)
+    release_date = Column(DATETIME)
+    runtime = Column(Integer)
+    available_on = Column(Integer, default=0) 
+    youtube_trailer_id = Column(String, nullable=True)
 
     def as_dict(self) -> dict[str, str]:
         return {column.name: getattr(self, column.name) for column in self.__table__.columns}
@@ -25,5 +28,5 @@ class Movie(Base):
             rating=data["vote_average"],
             release_date=datetime.strptime(data["release_date"], "%Y-%m-%d"),
             description=data["overview"],
-            genres=[] # TODO: get AI to predict genres from description.
+            runtime=data["runtime"],
         )
